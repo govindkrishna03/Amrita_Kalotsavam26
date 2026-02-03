@@ -39,7 +39,7 @@ export default function Home() {
 
   return (
     <main 
-      className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white overflow-hidden"
+      className="min-h-screen  bg-gradient-to-br from-black via-gray-900 to-black text-white overflow-hidden"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -92,41 +92,17 @@ export default function Home() {
           transition={{ duration: 1, ease: "easeOut" }}
         >
           {/* Enhanced Title with Staggered Letters */}
-          <motion.h1 
-            className="font-inter font-black bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent text-3xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-tight"
-            initial="hidden"
-            animate="show"
-            variants={{
-              hidden: { opacity: 0, y: 100 },
-              show: {
-                opacity: 1, 
-                y: 0,
-                transition: {
-                  staggerChildren: 0.1,
-                  delayChildren: 0.1
-                }
-              }
-            }}
-          >
-            {Array.from("AmritaKalotsavam 2026").map((letter, i) => (
-              <motion.span
-                key={i}
-                variants={{
-                  hidden: { opacity: 0, y: 50 },
-                  show: { 
-                    opacity: 1, 
-                    y: 0,
-                    rotateX: i % 2 === 0 ? [0, -10, 0] : [0, 10, 0]
-                  }
-                }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                style={{ display: "inline-block" }}
-                className={letter === " " ? "w-4 inline-block" : ""}
-              >
-                {letter}
-              </motion.span>
-            ))}
-          </motion.h1>
+          <motion.h1
+  className="font-inter font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent
+             text-3xl sm:text-6xl md:text-7xl lg:text-8xl tracking-wide leading-tight
+             drop-shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
+  initial={{ opacity: 0, y: 40, scale: 0.95 }}
+  animate={{ opacity: 1, y: 0, scale: 1 }}
+  transition={{ duration: 1, ease: "easeOut" }}
+>
+  Amrita Kalotsavam 2026
+</motion.h1>
+
 
           {/* Responsive Description */}
           <motion.p 
