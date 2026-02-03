@@ -1,8 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-.font-bungee {
+/* .font-bungee {
   font-family: var(--font-bungee);
-}
+} */
 .font-playfair {
   font-family: var(--font-playfair);
 }
