@@ -93,7 +93,7 @@ export default function Home() {
         >
           {/* Enhanced Title with Staggered Letters */}
           <motion.h1 
-            className="font-bungee font-black bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent text-3xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-tight"
+            className="font-inter font-black bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent text-3xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-tight"
             initial="hidden"
             animate="show"
             variants={{
@@ -103,7 +103,7 @@ export default function Home() {
                 y: 0,
                 transition: {
                   staggerChildren: 0.1,
-                  delayChildren: 0.3
+                  delayChildren: 0.1
                 }
               }
             }}

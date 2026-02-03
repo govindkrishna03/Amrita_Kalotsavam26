@@ -3,7 +3,18 @@
 .font-bungee {
   font-family: var(--font-bungee);
 }
-
+.font-playfair {
+  font-family: var(--font-playfair);
+}
+.font-inter {
+  font-family: var(--font-inter);
+}
+.font-geist-sans {
+  font-family: var(--font-geist-sans);
+}
+.font-geist-mono {
+  font-family: var(--font-geist-mono);
+}
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
