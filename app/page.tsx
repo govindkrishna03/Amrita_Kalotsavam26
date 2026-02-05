@@ -111,7 +111,7 @@ export default function Home() {
             transition={{ duration: 1.2, ease: "easeOut" }}
 
           >
-            Amrita Kalotsavam 2026
+            ARANGU 2026
           </motion.h1>
 
 
