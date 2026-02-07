@@ -1,17 +1,20 @@
 'use client'
-
+import { useEffect } from "react"
 import { ThreeDMarquee } from "@/components/ui/3d-marquee"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { useState } from "react"
+import { getCSRFToken } from "@/lib/csrf"
+
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL!
 
 const images = [
     "/col1.jpeg", "/col2.jpeg", "/col3.jpeg", "/col4.jpeg", "/col5.jpeg",
     "/col6.jpeg", "/col7.jpeg", "/col8.jpeg", "/col9.jpeg", "/col10.jpeg",
 ]
 
-export default function LoginPage() {
+export default function RegisterPage() {
     // Step 1: Email Entry | Step 2: OTP + Profile Details
     const [step, setStep] = useState(1)
 
@@ -22,7 +25,12 @@ export default function LoginPage() {
     const [house, setHouse] = useState("")
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
-
+    useEffect(() => {
+        fetch(`${API_BASE}/users/csrf/`, {
+            method: "GET",
+            credentials: "include",
+        })
+    }, [])
     // Step 1: Request OTP
     const handleRequestOtp = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -34,17 +42,23 @@ export default function LoginPage() {
 
         setLoading(true)
         try {
-            const res = await fetch("http://192.168.29.84:8000/app/send-otp/", {
+            const res = await fetch(`${API_BASE}/users/send-otp/`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken()!,
+                },
                 body: JSON.stringify({ email }),
             })
-            if (!res.ok) {
+
+            if (res.ok) {
                 setStep(2)
             } else {
                 const data = await res.json()
                 setError(data.error || "Failed to send OTP")
             }
+
         } catch (err) {
             setError("Server not reachable")
         } finally {
@@ -70,25 +84,25 @@ export default function LoginPage() {
         };
 
         try {
-            const res = await fetch("http://192.168.29.84:8000/app/register/", {
+            const res = await fetch(`${API_BASE}/users/register/`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken()!,
+                },
                 body: JSON.stringify(payload),
-            });
+            })
 
-            const data = await res.json();
+            const data = await res.json()
 
             if (res.ok) {
-                // Save user info to session so the Events page can use it
-                localStorage.setItem("kalotsavam_session", JSON.stringify({
-                    email: email,
-                    name: username
-                }));
-                // Redirect to Events
-                window.location.href = "/events";
+                // DO NOT assume login
+                window.location.href = "/login"
             } else {
-                setError(data.error || "Registration failed. Check if OTP is correct.");
+                setError(data.error || "Registration failed")
             }
+
         } catch (err) {
             setError("Connection to server failed.");
         } finally {
@@ -175,10 +189,10 @@ export default function LoginPage() {
                                     required
                                 >
                                     <option value="">Select House</option>
-                                    <option value="Anandamayi">Anandamayi</option>
-                                    <option value="Chinmayi">Chinmayi</option>
-                                    <option value="Jyothirmayi">Jyothirmayi</option>
-                                    <option value="Amritamayi">Amritamayi</option>
+                                    <option value="anandamayi">Anandamayi</option>
+                                    <option value="chinmayi">Chinmayi</option>
+                                    <option value="jyothirmayi">Jyothirmayi</option>
+                                    <option value="amritamayi">Amritamayi</option>
                                 </select>
                                 <Button type="submit" disabled={loading} className="w-full rounded-full bg-gradient-to-r from-white to-gray-100 py-6 text-lg font-bold text-black shadow-xl">
                                     {loading ? "Verifying..." : "Complete Registration"}

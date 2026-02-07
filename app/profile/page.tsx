@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { User as UserIcon, Mail, Hash, Castle, LogOut, ArrowLeft, Loader2 } from "lucide-react"
-
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL!
 type User = {
   name: string
   email: string
@@ -22,9 +22,18 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch("http://192.168.29.84:8000/app/details/", {
+        const token = localStorage.getItem("access")
+
+        if (!token) {
+          router.push("/login")
+          return
+        }
+
+        const res = await fetch(`${API_BASE}/users/details/`, {
           method: "GET",
-          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         })
 
         if (res.status === 401) {
@@ -34,16 +43,18 @@ export default function ProfilePage() {
 
         const data = await res.json()
         if (!res.ok) throw new Error(data.error || "Failed to load")
-        
+
         setUser(data)
-      } catch (err) {
+      } catch {
         setError("Could not connect to the server. Check your connection.")
       } finally {
         setLoading(false)
       }
     }
+
     fetchProfile()
   }, [router])
+
 
   const logout = () => {
     localStorage.removeItem("kalotsavam_session")
@@ -86,10 +97,10 @@ export default function ProfilePage() {
         {/* Profile Card */}
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl p-1">
           <div className="bg-gradient-to-b from-white/10 to-transparent p-8 rounded-[inherit]">
-            
+
             {/* Header / Avatar */}
             <div className="flex flex-col items-center mb-8">
-              <motion.div 
+              <motion.div
                 initial={{ rotate: -10, scale: 0.8 }}
                 animate={{ rotate: 0, scale: 1 }}
                 className="relative mb-4"
@@ -103,7 +114,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="absolute -bottom-2 -right-2 bg-green-500 w-6 h-6 rounded-full border-4 border-neutral-950" title="Online" />
               </motion.div>
-              
+
               <h1 className="text-2xl font-bold tracking-tight text-white">{user.name}</h1>
               <p className="text-gray-400 text-sm mt-1 flex items-center gap-1">
                 <Mail className="w-3 h-3" /> {user.email}
@@ -113,11 +124,11 @@ export default function ProfilePage() {
             {/* Details Grid */}
             <div className="grid grid-cols-1 gap-3">
               <ProfileItem icon={<Hash className="w-4 h-4" />} label="Roll Number" value={user.roll_number} />
-              <ProfileItem 
-                icon={<Castle className="w-4 h-4" />} 
-                label="House" 
-                value={user.house} 
-                highlight 
+              <ProfileItem
+                icon={<Castle className="w-4 h-4" />}
+                label="House"
+                value={user.house}
+                highlight
               />
             </div>
 

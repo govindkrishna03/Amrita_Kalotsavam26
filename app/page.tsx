@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL!
 const images = [
   "/col1.jpeg",
   "/col2.jpeg",
@@ -37,6 +37,14 @@ export default function Home() {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+  fetch(`${API_BASE}/users/csrf/`, {
+    method: "GET",
+    credentials: "include",
+  })
+}, [])
+
   const useIsTouchDevice = () => {
     const [isTouch, setIsTouch] = useState(false);
 

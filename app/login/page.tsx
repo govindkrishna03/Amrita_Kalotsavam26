@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ThreeDMarquee } from "@/components/ui/3d-marquee"
 import Link from "next/link"
-
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL!
 const images = [
   "/col1.jpeg", "/col2.jpeg", "/col3.jpeg", "/col4.jpeg", "/col5.jpeg",
   "/col6.jpeg", "/col7.jpeg", "/col8.jpeg", "/col9.jpeg", "/col10.jpeg",
@@ -23,22 +23,31 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      const res = await fetch("http://192.168.29.84:8000/app/login/", {
+      const res = await fetch(`${API_BASE}/auth/login/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include", // 🔥 REQUIRED
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ email, password }),
       })
 
-
-      const data = await res.json()
+      let data: any = {}
+      try {
+        data = await res.json()
+      } catch { }
 
       if (!res.ok) {
-        setError(data.error || "Invalid Email or Password")
+        setError(data.error || "Invalid email or password")
         return
       }
 
-      localStorage.setItem("kalotsavam_session", JSON.stringify(data.user))
+      localStorage.setItem("access", data.access)
+      localStorage.setItem("refresh", data.refresh)
+      localStorage.setItem(
+        "kalotsavam_session",
+        JSON.stringify(data.user)
+      )
+
       window.location.href = "/events"
     } catch {
       setError("Server not reachable")
